@@ -1,0 +1,782 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0",
+        "title": "To-do Demo",
+        "description": "## Welcome\n\nThis is a place to put general notes and extra information, for internal use.\n\nTo get started designing/documenting this API, select a version on the left. ## Welcome\n\nThis is a place to put general notes and extra information, for internal use.\n\nTo get started designing/documenting this API, select a version on the left."
+    },
+    "host": "todos.stoplight.io",
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "apikey": {
+            "name": "apikey",
+            "type": "apiKey",
+            "in": "query"
+        }
+    },
+    "paths": {
+        "/todos/{todoId}": {
+            "parameters": [
+                {
+                    "name": "todoId",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "operationId": "GET_todo",
+                "summary": "Get Todo",
+                "tags": [
+                    "Todos"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/todo-full"
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/responses/trait:standardErrors:401"
+                    },
+                    "403": {
+                        "$ref": "#/responses/trait:standardErrors:403"
+                    },
+                    "404": {
+                        "$ref": "#/responses/trait:standardErrors:404"
+                    },
+                    "500": {
+                        "$ref": "#/responses/trait:standardErrors:500"
+                    }
+                },
+                "x-stoplight": {
+                    "id": "GET_todo",
+                    "beforeScript": null,
+                    "afterScript": "function (ctx, request, response) {\n  // Store the latest fetched todo id in variables\n  // for easy use.\n  if (response.statusCode.get() == 200) {\n    var body = response.body.get();\n    SL.variables.lastTodoId = body.id;\n  }\n}",
+                    "public": true,
+                    "mock": {
+                        "statusCode": 200,
+                        "dynamic": false,
+                        "enabled": false
+                    }
+                }
+            },
+            "put": {
+                "operationId": "PUT_todos",
+                "summary": "Update Todo",
+                "tags": [
+                    "Todos"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/todo-partial",
+                            "example": {
+                                "name": "my todo's new name",
+                                "completed": false
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/todo-full"
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/responses/trait:standardErrors:401"
+                    },
+                    "403": {
+                        "description": "",
+                        "schema": {
+                            "type": "object"
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/responses/trait:standardErrors:404"
+                    },
+                    "500": {
+                        "$ref": "#/responses/trait:standardErrors:500"
+                    }
+                },
+                "security": [
+                    {
+                        "apikey": []
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "PUT_todos",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "statusCode": 200,
+                        "dynamic": false,
+                        "enabled": false
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "DELETE_todo",
+                "summary": "Delete Todo",
+                "tags": [
+                    "Todos"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "",
+                        "schema": {
+                            "type": "object",
+                            "properties": {}
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/responses/trait:standardErrors:401"
+                    },
+                    "403": {
+                        "$ref": "#/responses/trait:standardErrors:403"
+                    },
+                    "404": {
+                        "$ref": "#/responses/trait:standardErrors:404"
+                    },
+                    "500": {
+                        "$ref": "#/responses/trait:standardErrors:500"
+                    }
+                },
+                "security": [
+                    {
+                        "apikey": []
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "DELETE_todo",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "statusCode": 200,
+                        "dynamic": false,
+                        "enabled": false
+                    }
+                }
+            }
+        },
+        "/todos": {
+            "post": {
+                "operationId": "POST_todos",
+                "summary": "Create Todo",
+                "tags": [
+                    "Todos"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/todo-partial",
+                            "example": {
+                                "name": "my todo's name",
+                                "completed": false
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/todo-full"
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/responses/trait:standardErrors:401"
+                    },
+                    "403": {
+                        "description": "",
+                        "schema": {
+                            "type": "object",
+                            "properties": {}
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/responses/trait:standardErrors:404"
+                    },
+                    "500": {
+                        "$ref": "#/responses/trait:standardErrors:500"
+                    }
+                },
+                "security": [
+                    {
+                        "apikey": []
+                    }
+                ],
+                "x-stoplight": {
+                    "id": "POST_todos",
+                    "beforeScript": "function (ctx, request) {\n  // Your javascript code here.\n  // Code completion enabled.\n  // You have access to a global \"SL\" object.wef\n}",
+                    "afterScript": "function (ctx, request, response) {\n  // If we successfully created a todo, store \n  // it's id as a variable for later use.\n  if (response.statusCode.get() == 200) {\n    var body = response.body.get();\n    SL.variables.lastTodoId = body.id;\n  }\n  \n  request.url.query.get('p')\n}",
+                    "public": true,
+                    "mock": {
+                        "dynamic": false,
+                        "enabled": false,
+                        "statusCode": 200
+                    }
+                }
+            },
+            "get": {
+                "operationId": "GET_todos",
+                "summary": "List Todos",
+                "tags": [
+                    "Todos"
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "This is how it works.",
+                        "required": false,
+                        "type": "integer",
+                        "maximum": 100
+                    },
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/todo-full"
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/responses/trait:standardErrors:401"
+                    },
+                    "403": {
+                        "$ref": "#/responses/trait:standardErrors:403"
+                    },
+                    "404": {
+                        "$ref": "#/responses/trait:standardErrors:404"
+                    },
+                    "500": {
+                        "$ref": "#/responses/trait:standardErrors:500"
+                    }
+                },
+                "x-stoplight": {
+                    "id": "GET_todos",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "statusCode": 200,
+                        "dynamic": false,
+                        "enabled": false
+                    }
+                }
+            }
+        },
+        "/mocked": {
+            "get": {
+                "operationId": "GET_mocked",
+                "summary": "Mock Example",
+                "tags": [
+                    "Misc"
+                ],
+                "description": "This is an example of a mocked endpoint. \n\nThis endpoint does not actually exist in the api - try visiting [http://todos.stoplight.io/mocked](http://todos.stoplight.io). You will see the default response (same as you get when you visit the root \"/\" url).\n\nWe have defined a 200 response below, with an example, and then explicitly turned on mocking for this endpoint via the dropdown in the right sidebar.\n\nWith this enabled, if you visit {your prism instance host}/mocked, you'll see the mocked example. You can find the mock server host for this API by clicking the \"Design Dashboard\" button at the top of this screen. You can also try sending a test request by clicking \"send test request\" button in the right sidebar.",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "this": {
+                                    "type": "string"
+                                },
+                                "mocked": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-stoplight": {
+                    "id": "GET_mocked",
+                    "beforeScript": null,
+                    "afterScript": null,
+                    "public": true,
+                    "mock": {
+                        "statusCode": 200,
+                        "dynamic": null,
+                        "enabled": true
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "trait:paged:limit": {
+            "name": "limit",
+            "in": "query",
+            "description": "This is how it works.",
+            "required": false,
+            "type": "integer",
+            "maximum": 100
+        },
+        "trait:paged:skip": {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "type": "string"
+        }
+    },
+    "responses": {
+        "trait:standardErrors:401": {
+            "description": "",
+            "schema": {
+                "type": "object"
+            }
+        },
+        "trait:standardErrors:403": {
+            "description": "",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "message"
+                ]
+            }
+        },
+        "trait:standardErrors:404": {
+            "description": "",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "error": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "status",
+                    "error"
+                ]
+            }
+        },
+        "trait:standardErrors:500": {
+            "description": "",
+            "schema": {
+                "type": "object"
+            }
+        }
+    },
+    "definitions": {
+        "todo-full": {
+            "title": "Todo Full",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/todo-partial"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "integer"
+                        },
+                        "completed_at": {
+                            "type": [
+                                "string",
+                                "null"
+                            ],
+                            "format": "date-time"
+                        },
+                        "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "updated_at": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    "required": [
+                        "id"
+                    ]
+                }
+            ],
+            "x-stoplight": {
+                "id": "todo-full",
+                "name": "Todo Full",
+                "public": true
+            }
+        },
+        "todo-partial": {
+            "title": "Todo Partial",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "completed": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "x-stoplight": {
+                "id": "todo-partial",
+                "name": "Todo Partial",
+                "public": true
+            }
+        }
+    },
+    "x-stoplight": {
+        "beforeScript": "function(ctx, request) {\n  // Your javascript code here.\n  // Code completion enabled.\n  // You have access to a global \"SL\" object.\n}",
+        "afterScript": "function (ctx, request, response) {\n  // Your javascript code here.\n  // Code completion enabled.\n  // You have access to a global \"SL\" object.\n}",
+        "version": {
+            "groups": {
+                "utilFuncs": [],
+                "savedEntries": [],
+                "tests": [],
+                "traits": [],
+                "docs": [
+                    {
+                        "items": [
+                            {
+                                "type": "docTextSections",
+                                "_id": "introduction"
+                            },
+                            {
+                                "type": "docTextSections",
+                                "_id": "authentication"
+                            },
+                            {
+                                "type": "endpoints",
+                                "_id": "pZskYMgiv68g9G4tj"
+                            },
+                            {
+                                "type": "endpoints",
+                                "_id": "D6K9mPzvaiGMrScXD"
+                            }
+                        ],
+                        "divider": false,
+                        "name": "Getting Started"
+                    },
+                    {
+                        "items": [
+                            {
+                                "type": "schemas",
+                                "_id": "rYDgXJB6LMqbyRWoQ"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "mjuWcmiJQctzMhday"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "GbRdbnXHYjDFH4bPA"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "YALscvimboMANsKEP"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "GTL9CeDMtKqbTuMQQ"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "3QDFMDBG4kfTfDcE9"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "DDeAqF76SK7xLnTrR"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "bK7AGQAgF52P4jbuN"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "sJqgs9CDyMTeGi5Nk"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "bmu6w23hEqHkrHBGf"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "9YFSQXHju9BAru3Zs"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "SALvegp4L293mhkGK"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "kbHjTjNvoT7z9HhQR"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "nJT2vkKPaZgi394Re"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "kXoN3cTWTbWPk3Fbk"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "4HP9DZH2y2YSSXguf"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "TEBifrt3xHcL2H3S6"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "XQmdCYR7KLTXHS63Y"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "NPWG2fPmXQqj6zoMd"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "xymDPXHz7WfSJ9DRb"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "9JLyebKGQXWfnwJZw"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "ii4ZN9y3RfGtFRnWP"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "NLZotM6i3zWHL6Hh9"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "dkutsWfiv35avBmaN"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "2vRfw8CuJoXjpostm"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "NpofoK464ByFkYxtC"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "KBscuave2ygKS9sGe"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "xNyZBg4ndZyp6YEzM"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "a34LpYBinmXGW236z"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "aLhfnPbLbLrQWbhvn"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "JwKqBkTf8hw7GeLS2"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "BRiahTuXkfcEHkLEx"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "Zas9ogPjXnw7oTD6k"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "RQEzPHbMxNPW9PXj6"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "BwC63d2rqxELK4Y2j"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "taYZwKt3h8P6LbC9b"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "SxJCrB74ooyNc68wn"
+                            }
+                        ],
+                        "divider": true,
+                        "name": "API Reference"
+                    },
+                    {
+                        "name": "Todos",
+                        "items": [
+                            {
+                                "type": "endpoints",
+                                "_id": "GET_todo"
+                            },
+                            {
+                                "type": "endpoints",
+                                "_id": "POST_todos"
+                            },
+                            {
+                                "type": "endpoints",
+                                "_id": "PUT_todos"
+                            },
+                            {
+                                "type": "endpoints",
+                                "_id": "DELETE_todo"
+                            },
+                            {
+                                "_id": "GET_todos",
+                                "type": "endpoints"
+                            },
+                            {
+                                "type": "traits",
+                                "_id": "JbccYCmtnHFcezqJ3"
+                            },
+                            {
+                                "type": "traits",
+                                "_id": "9R6Ctboxwig7v55ig"
+                            },
+                            {
+                                "type": "traits",
+                                "_id": "cYL9jkgqvkJR9LyxZ"
+                            },
+                            {
+                                "type": "traits",
+                                "_id": "xDjco4GTWJhfcu5SC"
+                            },
+                            {
+                                "type": "traits",
+                                "_id": "d2iBS5GWaafm6by9X"
+                            },
+                            {
+                                "type": "traits",
+                                "_id": "Sny4yeMLQ5Mg2KWeg"
+                            },
+                            {
+                                "type": "traits",
+                                "_id": "QBmdkQjaHPotD9uo6"
+                            },
+                            {
+                                "type": "traits",
+                                "_id": "zscH79CoAyYAF9yc6"
+                            },
+                            {
+                                "type": "traits",
+                                "_id": "A8qJbFncpqdaHGpNK"
+                            },
+                            {
+                                "type": "traits",
+                                "_id": "yYFJi9gNa5QztntWb"
+                            },
+                            {
+                                "type": "traits",
+                                "_id": "KFYZPz3GSpeHMP4tF"
+                            }
+                        ],
+                        "divider": false,
+                        "description": null
+                    },
+                    {
+                        "description": null,
+                        "name": "Misc",
+                        "items": [
+                            {
+                                "type": "endpoints",
+                                "_id": "GET_mocked"
+                            }
+                        ],
+                        "divider": false
+                    },
+                    {
+                        "items": [
+                            {
+                                "_id": "todo-full",
+                                "type": "schemas"
+                            },
+                            {
+                                "type": "schemas",
+                                "_id": "todo-partial"
+                            }
+                        ],
+                        "divider": false,
+                        "description": null,
+                        "name": "Models"
+                    },
+                    {
+                        "description": null,
+                        "name": "Traits",
+                        "items": [
+                            {
+                                "type": "traits",
+                                "_id": "paged"
+                            },
+                            {
+                                "_id": "standardErrors",
+                                "type": "traits"
+                            }
+                        ],
+                        "divider": false
+                    }
+                ]
+            }
+        },
+        "functions": {},
+        "textSections": {
+            "authentication": {
+                "id": "authentication",
+                "name": "Authentication",
+                "content": "Authentication is very simple. Just add a query string parameter, \"apikey\", with the value \"123\", to requests that require authentication.",
+                "public": true
+            },
+            "introduction": {
+                "id": "introduction",
+                "name": "Introduction",
+                "content": "This is a real API, that lives at [http://todos.stoplight.io](http://todos.stoplight.io).\n\nIt demonstrates several aspects of the StopLight design module, including model $referencing, model inheritance, traits, mocking, and testing. Feel free to explore the resources in this API to see how everything is put together.\n\n### Referencing\n\nSee the List Todos endpoint for an example of creating a response body from an array of models (the Todo Full model in this case).\n\n### Inheritance\n\nCheck out the Todo Full model to see inheritance.\n\n### Mocking\n\nCheck out the Mock Example endpoint to see mocking in action.",
+                "public": true
+            }
+        },
+        "mock": {
+            "dynamic": false,
+            "enabled": false
+        }
+    },
+    "x-tests": {}
+}
